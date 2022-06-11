@@ -1,3 +1,5 @@
+import com.sun.tools.javac.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +11,7 @@ import java.util.Random;
 
 public class MainGame extends JPanel implements ActionListener, KeyListener {
     Timer time = new Timer(100, this);
-    LinkedList<Coordinates> snakeBody = new LinkedList<>();
+    static LinkedList<Coordinates> snakeBody = new LinkedList<>();
     int velx = 10, vely = 0;
     int foodX, foodY;
     char direction = 'r';
@@ -27,10 +29,9 @@ public class MainGame extends JPanel implements ActionListener, KeyListener {
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+
         g.setColor(Color.RED);
-        for (Coordinates coordinates : snakeBody) {
-            g.fillRect(coordinates.getX(), coordinates.getY(), 10, 10);
-        }
+        for (Coordinates coordinates : snakeBody) g.fillRect(coordinates.getX(), coordinates.getY(), 10, 10);
 
         g.setColor(Color.black);
         g.fillRect(foodX, foodY, 10, 10);
@@ -40,7 +41,9 @@ public class MainGame extends JPanel implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent actionEvent) {
 
         //printLocation();
-        checkCollision();
+        CollisionHandler.checkBodyCollision();
+        CollisionHandler.noBorderCollision();
+        //CollisionHandler.hasBorderCollision();
 
         snakeBody.getFirst().setPrev_x(snakeBody.getFirst().getX());
         snakeBody.getFirst().setPrev_y(snakeBody.getFirst().getY());
@@ -77,17 +80,6 @@ public class MainGame extends JPanel implements ActionListener, KeyListener {
                     valid = false;
                     break;
                 }
-            }
-        }
-    }
-
-    public void checkCollision(){
-        int x = snakeBody.getFirst().getX();
-        int y = snakeBody.getFirst().getY();
-
-        for(int i = 1; i < snakeBody.size(); ++i){
-            if(snakeBody.get(i).getX() == x && snakeBody.get(i).getY() == y){
-                System.exit(0);
             }
         }
     }
